@@ -1,5 +1,5 @@
 # KTP-Indonesian_ID_Card-OCR
-This project aims to create an API that can scan and convert important data (NIK, Name, Place and Date of Birth) from a KTP image into text using PyTesseract Optical Character Recognition (OCR). In addition there is also a deep learning (YOLO) based KTP detector that can automatically crop the KTP image to improve OCR's ability to read text on images (this feature is still very imperfect and requires further development). Thanks to the developers who have developed most of the contents of this system before.
+This project aims to create an API to scan and convert personal data which covers identity number, name, address, etc. from the image format of an indonesian identification card (*KTP*) into text using PyTesseract Optical Character Recognition (OCR). This includes a deep learning YOLO (You Only Look Once method) based detector that can automatically crop the image to improve OCR's ability to read text from images (this feature requires further development). Big thanks to the developers who have developed most of the contents of this system before.
 
 ## Prerequisites
 * Flask
