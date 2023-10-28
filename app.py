@@ -2,10 +2,9 @@ import cv2
 import json
 import numpy as np
 import ocr
-import time
-# Note: Uncomment for YOLO feature
+import timeit
 import yolo_detect
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
@@ -27,21 +26,40 @@ def upload_file():
 
         # Note: Uncomment for YOLO feature
         image = yolo_detect.main(image)
-        nik, nama, tempat_lahir, tgl_lahir, jenis_kelamin, agama, status_perkawinan = ocr.main(image)
+        # print(image)
 
-        finish_time = time.time() - start_time
+        try:
+            (nik, nama, tempat_lahir, tgl_lahir, jenis_kelamin, agama,
+            status_perkawinan, provinsi, kabupaten, alamat, rt_rw, 
+            kel_desa, kecamatan, pekerjaan, kewarganegaraan) = ocr.main(image)
 
-        json_content = {
-            'nik': str(nik),
-            'nama': str(nama),
-            'tempat_lahir': str(tempat_lahir),
-            'tgl_lahir': str(tgl_lahir),
-            'jenis_kelamin': str(jenis_kelamin),
-            'agama': str(agama),
-            'status_perkawinan': str(status_perkawinan),
-            'time_elapsed': str(round(finish_time, 3))
-        }
+            finish_time = time.time() - start_time
 
+            json_content = {
+                'nik': str(nik),
+                'nama': str(nama),
+                'tempat_lahir': str(tempat_lahir),
+                'tgl_lahir': str(tgl_lahir),
+                'jenis_kelamin': str(jenis_kelamin),
+                'agama': str(agama),
+                'status_perkawinan': str(status_perkawinan),
+                'pekerjaan': str(pekerjaan),
+                'kewarganegaraan': str(kewarganegaraan),
+                'alamat': {
+                    'name': str(alamat),
+                    'rt_rw': str(rt_rw),
+                    'kel_desa': str(kel_desa),
+                    'kecamatan': str(kecamatan),
+                    'kabupaten': str(kabupaten),
+                    'provinsi': str(provinsi)
+                },
+                'time_elapsed': str(round(finish_time, 3))
+            }
+        except:
+            json_content = {
+                'error': True,
+                'message': 'Maaf, KTP tidak terdeteksi'
+            }
     python2json = json.dumps(json_content)
     return app.response_class(python2json, content_type = 'application/json')
 
